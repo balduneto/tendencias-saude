@@ -1,0 +1,688 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Globe, MapPin, TrendingUp, Activity, 
+  Microscope, Cpu, Pill, Stethoscope, 
+  Smartphone, MonitorHeart, Award, Building2,
+  Syringe, BrainCircuit, Dna, Rocket,
+  Lightbulb, ChevronDown, ChevronUp, Info, BookOpen, Layers,
+  ChevronLeft, ChevronRight, ArrowRight, ArrowLeft, Target, Eye, FlaskConical, Beaker,
+  FilterX, FlaskRound, Zap, ShieldCheck, TrendingDown, DollarSign
+} from 'lucide-react';
+
+// --- 1. ESTRUTURAS DE DADOS TÉCNICOS (DEFINIDOS NO TOPO PARA EVITAR ERROS DE REFERÊNCIA) ---
+
+const TABS = [
+  { id: 'global', label: 'Eixos e Tendências', icon: TrendingUp },
+  { id: 'top10', label: 'Potências Mundiais', icon: Globe },
+  { id: 'brasil', label: 'Matriz Nacional', icon: MapPin },
+  { id: 'innovations', label: 'Radar de Maturidade', icon: Target },
+];
+
+const globalStats = [
+  { label: 'Mercado Global de Saúde', value: '$9T', source: 'Deloitte' },
+  { label: 'Gasto com Medicamentos (Projetado 2028)', value: 'US$ 2,3 Tri', source: 'Deloitte' },
+  { label: 'Doses Diárias Previstas (2028)', value: '3,7 Tri', source: 'Deloitte' },
+  { label: 'Terapias Gênicas e Ácido Ribonucleico (RNA) em Desenvolvimento', value: '~3.200', source: 'Deloitte' },
+];
+
+const trends = [
+  { 
+    title: 'Genômica & Medicina de Precisão', 
+    desc: 'Uso do Ácido Desoxirribonucleico (DNA) para criar tratamentos customizados baseados no código genético individual.',
+    bigNumber: '99%', 
+    metric: 'Queda no custo de sequenciamento',
+    insight: 'O custo para sequenciar um genoma humano caiu de US$ 100 milhões em 2001 para menos de US$ 200 em 2025. Isso viabiliza a medicina preventiva em massa.',
+    data: 'O mercado global de oncologia de precisão deve atingir US$ 126 bilhões até 2030.',
+    source: 'Nature / NHGRI (Inst. Nacional de Pesquisa do Genoma Humano)', 
+    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80' 
+  },
+  { 
+    title: 'Inteligência Artificial (IA) Clínica', 
+    desc: 'Sistemas de Inteligência Artificial (IA) que analisam exames e aceleram a descoberta de novos fármacos.',
+    bigNumber: '900+', 
+    metric: 'Algoritmos aprovados pela FDA',
+    insight: 'A Administração de Alimentos e Medicamentos (FDA) dos EUA já autorizou quase mil dispositivos médicos baseados em IA. 75% deles focados em Radiologia.',
+    data: 'A IA pode reduzir o tempo de descoberta de novas moléculas (Drug Discovery) de 5 anos para apenas 12 meses.',
+    source: 'FDA / Deloitte 2025', 
+    image: 'https://i.postimg.cc/dtssP1YP/Ia-clinica.jpg' 
+  },
+  { 
+    title: 'Biofármacos & Agonistas de GLP-1', 
+    desc: 'Medicamentos biológicos como o Peptídeo Semelhante ao Glucagon-1 (GLP-1) que tratam obesidade e diabetes.',
+    bigNumber: '$100B', 
+    metric: 'Valor de mercado em 2030',
+    insight: 'Os medicamentos GLP-1 (como Ozempic e Mounjaro) tornaram-se o maior fenômeno comercial da história da farmácia, alterando o Produto Interno Bruto (PIB) de nações.',
+    data: '1 em cada 8 adultos nos Estados Unidos (EUA) já utilizou algum medicamento desta classe em 2024.',
+    source: 'IQVIA / Goldman Sachs', 
+    image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=600&q=80' 
+  },
+  { 
+    title: 'Terapias Avançadas & CRISPR', 
+    desc: 'Edição de genes via Repetições Palindrômicas Curtas Agrupadas (CRISPR) e reprogramação celular.',
+    bigNumber: '1.500', 
+    metric: 'Estudos clínicos ativos',
+    insight: 'A aprovação da primeira terapia baseada em CRISPR para anemia falciforme abriu as portas para a cura definitiva de doenças genéticas antes incuráveis.',
+    data: 'O custo de terapias de Células T com Receptores de Antígenos Quiméricos (CAR-T) ainda é o maior gargalo: US$ 400 mil por paciente.',
+    source: 'PharmaShots / Aliança para Medicina Regenerativa', 
+    image: 'https://i.postimg.cc/vTYHtsjj/EUA.png' 
+  },
+  { 
+    title: 'Saúde Digital & Wearables', 
+    desc: 'Dispositivos Vestíveis (Wearables) que monitoram o paciente 24h por dia, permitindo a telessaúde contínua.',
+    bigNumber: '1.1 Bilhão', 
+    metric: 'Dispositivos conectados no mundo',
+    insight: 'O monitoramento remoto reduz em 38% as reinternações hospitalares por insuficiência cardíaca e doenças crônicas.',
+    data: 'O volume de dados gerados por pacientes fora do hospital cresce 48% ao ano.',
+    source: 'HIMSS 2025 / Statista', 
+    image: 'https://images.unsplash.com/photo-1557825835-70d97c4aa567?auto=format&fit=crop&w=600&q=80' 
+  },
+  { 
+    title: 'MedTech & Robótica Cirúrgica', 
+    desc: 'Sistemas robóticos que aumentam a precisão do cirurgião e reduzem o tempo de recuperação hospitalar.',
+    bigNumber: '0.5mm', 
+    metric: 'Margem de erro robótica',
+    insight: 'Enquanto a precisão humana média varia em 2.0mm, sistemas robóticos atingem precisão submilimétrica, preservando tecidos saudáveis em cirurgias.',
+    data: 'Mais de 1 milhão de cirurgias robóticas são realizadas anualmente no mundo.',
+    source: 'MedTech Europe / Intuitive Surgical', 
+    image: 'https://i.postimg.cc/HnKB2n0X/MEDTECH.jpg' 
+  },
+];
+
+const top10 = [
+  { id: 'us', rank: 1, name: 'Estados Unidos 🇺🇸', stats: ['Score Composto: 94/100', 'Nature Index: 22.082 Share', '13 Hospitais no Top 50 Global'], keyInstitutions: 'NIH, FDA, Harvard, Mayo Clinic.', strongAdvances: 'IA médica, terapias de Ácido Ribonucleico Mensageiro (mRNA) e medicina de precisão.', detail: 'Maior ecossistema mundial de medicina avançada. Lidera a dimensão de Ciência & Tecnologia no WIHI (Índice Mundial de Inovação em Saúde).', note: 'País com maior investimento em biotecnologia e capital de risco do mundo.', image: 'https://i.postimg.cc/VNgzcnDW/eua-clevelan.jpg', specialty: 'Potência em Ciência & IA' },
+  { id: 'ch', rank: 2, name: 'Suíça 🇨🇭', stats: ['Score Composto: 89/100', '1º WIHI (66.19 pts)', 'Roche: Líder Corporativo'], keyInstitutions: 'Roche, Novartis, ETH Zurich, EPFL.', strongAdvances: 'Farmacêutica premium, biotecnologia e regulação sanitária sofisticada.', detail: 'O país mais equilibrado. Lidera o WIHI 2024 e o Global Innovation Index da Organização Mundial da Propriedade Intelectual (WIPO).', note: 'O modelo mais sustentável e de alto valor agregado na indústria farmacêutica.', image: 'https://i.postimg.cc/sXcxw1B4/swiss.webp', specialty: 'Eficiência Sistêmica & Farmácia' },
+  { id: 'de', rank: 3, name: 'Alemanha 🇩🇪', stats: ['Score Composto: 86/100', '3º Nature Index (5.000 Share)', 'Charité Berlin: 7º do Mundo'], keyInstitutions: 'Charité Berlin, Max Planck Society, BioNTech.', strongAdvances: 'Engenharia biomédica, diagnóstico molecular e Pesquisa Translacional.', detail: 'Integra universidade, hospital e indústria com excelência. A Max Planck Society lidera em pesquisa não governamental.', note: 'Potência em engenharia diagnóstica e inovação hospitalar europeia.', image: 'https://i.postimg.cc/Kzrff7r0/Alemanha.jpg', specialty: 'Engenharia & Ciência Aplicada' },
+  { id: 'uk', rank: 4, name: 'Reino Unido 🇬🇧', stats: ['Score Composto: 84/100', 'Oxford: 1º Medical THE', '100k Genomas NHS'], keyInstitutions: 'NHS, Oxford, Cambridge, Genomics England.', strongAdvances: 'Genômica populacional, medicina baseada em evidências e biobancos.', detail: 'Líder em transformar ciência acadêmica em política pública de saúde através de seu sistema nacional (NHS).', note: 'O maior celeiro europeu de médicos-cientistas e talentos em biociências.', image: 'https://i.postimg.cc/LhdssPGM/Inglaterra.jpg', specialty: 'Genômica & Dados Públicos' },
+  { id: 'cn', rank: 5, name: 'China 🇨🇳', stats: ['Score Composto: 82/100', '1º Nature Index Global', '32.121 Share'], keyInstitutions: 'Chinese Academy of Sciences, Peking University.', strongAdvances: 'IA para diagnóstico, manufatura biomédica e sequenciamento em massa.', detail: 'Sua produção científica superou os Estados Unidos em volume de artigos de alto impacto no último ano.', note: 'Superpotência em escala e automação tecnológica aplicada à saúde.', image: 'https://i.postimg.cc/sXDmnQ6y/china-ia.jpg', specialty: 'Escala Científica & IA' },
+  { id: 'se', rank: 6, name: 'Suécia 🇸🇪', stats: ['Score Composto: 79/100', '1º em Qualidade WIHI', 'Karolinska: 5º do Mundo'], keyInstitutions: 'Karolinska Institutet, SciLifeLab.', strongAdvances: 'Registros populacionais, epidemiologia digital e medicina personalizada.', detail: 'País pequeno com densidade científica altíssima. O Karolinska Institute seleciona o Prêmio Nobel de Medicina.', note: 'Referência mundial em biobancos integrados e registros de vida inteira.', image: 'https://i.postimg.cc/4xWQYN40/suecia.jpg', specialty: 'Qualidade & Registros Digitais' },
+  { id: 'nl', rank: 7, name: 'Países Baixos 🇳🇱', stats: ['Score Composto: 76/100', '4º WIHI (Eficiência)', 'Amsterdam UMC (31º Mundo)'], keyInstitutions: 'Philips Health, Erasmus MC, Amsterdam UMC.', strongAdvances: 'Saúde Baseada em Valor (VBHC) e atenção coordenada integrada.', detail: 'Referência em eficiência sistêmica. Consegue entregar alta tecnologia com controle fiscal rigoroso.', note: 'Líder na transição do cuidado hospitalar para o monitoramento doméstico.', image: 'https://i.postimg.cc/2yTV0yKP/Holanda.png', specialty: 'Governança & Valor' },
+  { id: 'sg', rank: 8, name: 'Singapura 🇸🇬', stats: ['Score Composto: 75/100', '5º no Global Innovation Index', 'Singapore General: 9º Mundo'], keyInstitutions: 'Singapore General Hospital, A*STAR, NUS.', strongAdvances: 'Gestão preditiva hospitalar e hospitais inteligentes 100% digitais.', detail: 'Laboratório de futuro sob o conceito de Smart Nation (Nação Inteligente). Integrado e totalmente orientado por dados.', note: 'A nação mais ágil do mundo na adoção de IA em fluxos clínicos reais.', image: 'https://i.postimg.cc/V6K8Ttz7/Singapura.jpg', specialty: 'Digitalização & IA Clínica' },
+  { id: 'ca', rank: 9, name: 'Canadá 🇨🇦', stats: ['Score Composto: 74/100', 'Toronto General: 3º do Mundo', '8º no Nature Index'], keyInstitutions: 'University Health Network (UHN), Univ. Toronto.', strongAdvances: 'Cirurgias de transplantes complexas, neurociência e IA médica.', detail: 'Toronto é um polo mundial em medicina acadêmica, unindo pesquisa intensa e complexidade assistencial cirúrgica.', note: 'Referência em validação de inovações digitais em hospitais universitários.', image: 'https://i.postimg.cc/bY0CzPnC/Canada.jpg', specialty: 'Elite Assistencial Acadêmica' },
+  { id: 'jp', rank: 10, name: 'Japão 🇯🇵', stats: ['Score Composto: 72/100', '5º Nature Index', 'Líder em Medicina Regenerativa'], keyInstitutions: 'Univ. Tokyo, RIKEN (Células iPSC).', strongAdvances: 'Células-tronco, robótica para assistência ao idoso e ótica diagnóstica.', detail: 'Maior referência mundial em envelhecimento saudável e biologia regenerativa molecular.', note: 'O berço da Saúde 5.0 focada na longevidade sustentável e robótica.', image: 'https://i.postimg.cc/cCqfYv8b/japao-robot.jpg', specialty: 'Longevidade & Robótica' },
+];
+
+const brazilTop10States = [
+  { id: 'sp', rank: 1, name: 'São Paulo', axis: 'Medicina Translacional e Terapias CAR-T', stats: ['USP: 1º Nature BR', 'Einstein: 1º AL', 'R$ 15B/ano em P&D'], keyInstitutions: 'USP, Butantan, Einstein, Sírio-Libanês.', strongAdvances: 'Vacina da Dengue, CAR-T nacional e Hospital Inteligente no Complexo Hospital das Clínicas da Faculdade de Medicina da USP (HC-USP).', detail: 'Ecossistema mais completo, liderando desde a biomanufatura até pesquisas genéticas de fronteira.', source: 'Nature Index / FAPESP', image: 'https://i.postimg.cc/J0pJM2YF/Sao-Paulo-Einsten.jpg', specialty: 'Vanguarda & Capital' },
+  { id: 'mg', rank: 2, name: 'Minas Gerais', axis: 'Biotecnologia e Vacinas de RNA', stats: ['UFMG: 3º Nature BR', 'CTVacinas', 'Líder em Soros Funed'], keyInstitutions: 'UFMG, CTVacinas, Fundação Ezequiel Dias.', strongAdvances: 'Novas plataformas vacinais e soberania farmacêutica pública.', detail: 'Eixo estratégico para a segurança imunológica do Sistema Único de Saúde (SUS).', source: 'Nature Index / Funed', image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=600&q=80', specialty: 'Soberania Vacinal' },
+  { id: 'rj', rank: 3, name: 'Rio de Janeiro', axis: 'Complexo Industrial e Ciência Pública', stats: ['Fiocruz: 2º Nature BR', 'Bio-Manguinhos', 'Rede D’Or'], keyInstitutions: 'Fiocruz, INCA, IDOR, UFRJ.', strongAdvances: 'Plataforma nacional de mRNA e produção massiva de imunobiológicos.', detail: 'Sustenta a maior fabricação de vacinas da América Latina via Fundação Oswaldo Cruz.', source: 'Fiocruz / Nature', image: 'https://i.postimg.cc/nzxHDZLZ/Fiocruz.jpg', specialty: 'Indústria & Saúde Pública' },
+  { id: 'rs', rank: 4, name: 'Rio Grande do Sul', axis: 'Pesquisa Clínica e Telessaúde', stats: ['UFRGS: 5º Nature BR', 'Hospital Moinhos: 4º BR', 'HCPA'], keyInstitutions: 'UFRGS, HCPA, Moinhos de Vento.', strongAdvances: 'Telemedicina em Unidades de Terapia Intensiva (UTI) e genética médica aplicada.', detail: 'Referência nacional em medicina baseada em evidências e protocolos digitais.', source: 'Newsweek / Nature', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=600&q=80', specialty: 'Evidência Clínica' },
+  { id: 'pr', rank: 5, name: 'Paraná', axis: 'Genômica Clínica e Saúde de Precisão', stats: ['Genoma SUS', 'Pequeno Príncipe: Elite', 'Tecpar'], keyInstitutions: 'UFPR, Pequeno Príncipe, ICC Fiocruz.', strongAdvances: 'Sequenciamento genético em rede pública e oncologia pediátrica personalizada.', detail: 'Pioneiro na interiorização da genômica clínica no sistema público.', source: 'ICC / Fundação Araucária', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80', specialty: 'Genômica & Pediatria' },
+  { id: 'go', rank: 6, name: 'Goiás', axis: 'Saúde Digital e Polo Farmoquímico', stats: ['2º Polo Farma BR', 'R$ 21,6M Ceti-Saúde', '9º Ecossistema BR'], keyInstitutions: 'UFG, HC-UFG/Ebserh, FAPEG.', strongAdvances: 'IA aplicada ao SUS e neurocirurgia robótica avançada em hospital público.', detail: 'Foco em validar Deep-Tech (tecnologia profunda) e Inteligência Artificial diretamente na rede pública.', source: 'FAPEG / Nature Index', image: 'https://i.postimg.cc/7L6VzxDH/Goias.png', specialty: 'Deep-Tech & Manufatura' },
+];
+
+const mapDataGlobal = [
+  { id: 'us', name: 'EUA 🇺🇸', top: '32%', left: '19%', size: 48, color: 'bg-red-600', rankingNumber: '1' },
+  { id: 'ca', name: 'Canadá 🇨🇦', top: '22%', left: '20%', size: 36, color: 'bg-indigo-400', rankingNumber: '9' },
+  { id: 'uk', name: 'Reino Unido 🇬🇧', top: '23%', left: '46%', size: 38, color: 'bg-blue-500', rankingNumber: '4' },
+  { id: 'de', name: 'Alemanha 🇩🇪', top: '25%', left: '50.5%', size: 40, color: 'bg-blue-600', rankingNumber: '3' },
+  { id: 'ch', name: 'Suíça 🇨🇭', top: '29%', left: '49.5%', size: 44, color: 'bg-indigo-600', rankingNumber: '2' },
+  { id: 'se', name: 'Suécia 🇸🇪', top: '16%', left: '51%', size: 34, color: 'bg-blue-400', rankingNumber: '6' },
+  { id: 'cn', name: 'China 🇨🇳', top: '36%', left: '75%', size: 42, color: 'bg-red-500', rankingNumber: '5' },
+  { id: 'sg', name: 'Singapura 🇸🇬', top: '48%', left: '78%', size: 34, color: 'bg-blue-600', rankingNumber: '8' },
+  { id: 'jp', name: 'Japão 🇯🇵', top: '34%', left: '86%', size: 34, color: 'bg-emerald-600', rankingNumber: '10' },
+  { id: 'nl', name: 'Holanda 🇳🇱', top: '23%', left: '48.5%', size: 30, color: 'bg-indigo-400', rankingNumber: '7' },
+];
+
+const mapDataBrazil = [
+  { id: 'sp', name: 'São Paulo', top: '70%', left: '60%', size: 44, color: 'bg-red-600', rankingNumber: '1' },
+  { id: 'mg', name: 'Minas Gerais', top: '60%', left: '65%', size: 40, color: 'bg-indigo-600', rankingNumber: '2' },
+  { id: 'rj', name: 'Rio de Janeiro', top: '65%', left: '68%', size: 38, color: 'bg-blue-600', rankingNumber: '3' },
+  { id: 'rs', name: 'Rio G. do Sul', top: '85%', left: '50%', size: 36, color: 'bg-blue-500', rankingNumber: '4' },
+  { id: 'pr', name: 'Paraná', top: '75%', left: '55%', size: 36, color: 'bg-emerald-500', rankingNumber: '5' },
+  { id: 'go', name: 'Goiás', top: '55%', left: '55%', size: 42, color: 'bg-yellow-500', rankingNumber: '6' },
+];
+
+const axisColors = {
+  'Saúde Digital & IA': '#3b82f6',
+  'Genômica & Precisão': '#8b5cf6',
+  'Biotecnologia & Terapias': '#ec4899',
+  'MedTech & Dispositivos': '#f59e0b',
+  'Saúde Pública e Vacinas': '#10b981',
+  'Robótica & Regenerativa': '#14b8a6'
+};
+
+const innovationsData = [
+  { id: 'inv1', title: 'Discovery Accelerator Quantum (Computação Quântica)', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic + IBM', axis: 'Saúde Digital & IA', trl: 6, desc: 'Utiliza computadores quânticos para simular interações entre vírus e proteínas em segundos. Isso permite prever a eficácia de novos medicamentos antes dos testes físicos.', impact: 'Acelera a descoberta de fármacos para doenças raras em até 10 vezes.', image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80', source: 'Cleveland Clinic' },
+  { id: 'inv4', title: 'FoundationOne® Liquid CDx (Biópsia Líquida)', country: 'Suíça 🇨🇭', institution: 'Roche', axis: 'Genômica & Precisão', trl: 9, desc: 'Teste de sangue que detecta DNA de tumores circulando na corrente sanguínea. Permite identificar mutações genéticas específicas do câncer sem biópsias invasivas.', impact: 'Indicação imediata da terapia-alvo correta, aumentando as chances de cura.', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80', source: 'Roche / FDA' },
+  { id: 'inv22', title: 'Terapia CAR-T Nacional (Reprogramação Celular)', country: 'Brasil 🇧🇷', institution: 'USP / Butantan', axis: 'Biotecnologia & Terapias', trl: 7, desc: 'Técnica que "ensina" as células do paciente a destruir o câncer. O Brasil criou um método nacional para baratear este tratamento de milhões para milhares de reais.', impact: 'Acesso democrático no SUS a um dos tratamentos mais caros do mundo.', image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80', source: 'USP / Anvisa' },
+  { id: 'inv23', title: 'Vacina contra Dengue Dose Única', country: 'Brasil 🇧🇷', institution: 'Instituto Butantan', axis: 'Saúde Pública e Vacinas', trl: 9, desc: 'Primeiro imunizante brasileiro de dose única que protege contra os 4 sorotipos da dengue. Facilita campanhas de vacinação em massa.', impact: 'Soberania nacional na produção de imunizantes estratégicos.', image: 'https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&w=800&q=80', source: 'Butantan' },
+  { id: 'inv28', title: 'Neurocirurgia Estereotáxica Robótica', country: 'Brasil 🇧🇷', institution: 'HC-UFG', axis: 'Robótica & Regenerativa', trl: 8, desc: 'Uso de braços robóticos submilimétricos para implantar eletrodos cerebrais para epilepsia. O robô elimina erros manuais e reduz o tempo de cirurgia.', impact: 'Segurança absoluta em cirurgias cerebrais de alta complexidade no SUS.', image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80', source: 'UFG / HC-Ebserh' },
+];
+
+// --- 2. COMPONENTES AUXILIARES ---
+
+const SectionHeader = ({ title, subtitle, icon: IconComponent }) => (
+  <div className="mb-4 border-b-2 border-slate-900 pb-2 flex justify-between items-end">
+    <div className="flex items-center gap-3">
+      {IconComponent && <IconComponent className="w-8 h-8 text-slate-900" />}
+      <h2 className="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">{String(title)}</h2>
+    </div>
+    {subtitle && <p className="text-slate-600 text-[10px] md:text-xs font-black max-w-sm text-right leading-tight hidden md:block uppercase tracking-widest">{String(subtitle)}</p>}
+  </div>
+);
+
+const DidacticIntro = ({ text, title = "Metodologia" }) => (
+  <div className="bg-slate-50 border-l-4 border-blue-600 p-4 mb-6 rounded-r-xl shadow-sm">
+    <div className="flex items-center gap-2 mb-1">
+      <Info className="w-4 h-4 text-blue-600" />
+      <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">{String(title)}</span>
+    </div>
+    <p className="text-slate-700 leading-relaxed text-sm md:text-base font-medium italic">
+      {String(text)}
+    </p>
+  </div>
+);
+
+const SourceTag = ({ source }) => (
+  <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-slate-100">
+    <Beaker className="w-3 h-3 text-slate-400" />
+    <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Fonte: {String(source)}</span>
+  </div>
+);
+
+const ExecutiveSummaryCard = ({ title, desc, icon, colorClass }) => (
+  <div className={`border-l-8 ${colorClass} bg-white p-3 rounded-r-2xl shadow-lg flex gap-4 items-center hover:scale-[1.02] transition-transform h-full cursor-default`}>
+    <span className="text-3xl">{String(icon)}</span>
+    <div>
+      <h4 className="font-black text-slate-900 text-sm uppercase tracking-tighter leading-none mb-1">{String(title)}</h4>
+      <p className="text-[11px] text-slate-600 font-medium leading-tight m-0">{String(desc)}</p>
+    </div>
+  </div>
+);
+
+const InteractiveMap = ({ selectedId, onSelect, mapData, title, mapImage, aspectClass = "aspect-[2/1] md:aspect-[3/1]" }) => {
+  const [hovered, setHovered] = useState(null);
+
+  return (
+    <div className={`relative w-full mb-6 group select-none ${aspectClass}`}>
+      <div className="absolute inset-0 bg-slate-100 rounded-[32px] overflow-hidden shadow-inner border-4 border-white">
+        <img src={String(mapImage) || "https://i.postimg.cc/Bbm1W0xq/mapa-mundi.jpg"} alt="Mapa" className="w-full h-full object-cover opacity-60 saturate-50 group-hover:saturate-100 transition-all duration-1000" />
+      </div>
+      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur px-4 py-1.5 rounded-xl shadow-lg border border-slate-200 pointer-events-none z-20">
+        <h3 className="font-black text-slate-900 flex items-center gap-2 text-sm uppercase tracking-tighter"><Globe className="w-4 h-4 text-blue-600"/> {String(title)}</h3>
+      </div>
+      <div className="absolute inset-0 z-30">
+        {mapData.map((pt) => (
+          <div
+            key={pt.id}
+            className="absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 z-30 flex justify-center items-center"
+            style={{ top: pt.top, left: pt.left }}
+            onClick={() => onSelect(pt.id)}
+            onMouseEnter={() => setHovered(pt)}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <div className={`absolute rounded-full animate-ping opacity-20 ${pt.color}`} style={{ width: pt.size, height: pt.size }}></div>
+            <div 
+              className={`relative rounded-full shadow-xl border-2 border-white transition-all flex items-center justify-center font-black text-white drop-shadow-lg
+                ${pt.color} ${selectedId === pt.id ? 'scale-125 ring-4 ring-blue-300 ring-opacity-50 z-40' : 'opacity-90 hover:opacity-100'}`}
+              style={{ width: pt.size, height: pt.size }}
+            >
+              <span style={{ fontSize: pt.size > 30 ? '12px' : '9px' }}>{String(pt.rankingNumber || pt.id.toUpperCase())}</span>
+            </div>
+            {(hovered?.id === pt.id || selectedId === pt.id) && (
+              <span className="absolute bottom-full mb-2 bg-slate-900 text-white text-[9px] uppercase font-black px-2 py-0.5 rounded-full shadow-2xl z-50 whitespace-nowrap">{String(pt.name)}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const RadarTab = () => {
+  const [selectedCountry, setSelectedCountry] = useState('Todos');
+  const [selectedAxis, setSelectedAxis] = useState('Todos');
+  const [selectedTrl, setSelectedTrl] = useState('Todos');
+  const [hoveredDot, setHoveredDot] = useState(null);
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  const filteredData = innovationsData.filter(item => {
+    if (selectedCountry !== 'Todos' && item.country !== selectedCountry) return false;
+    if (selectedAxis !== 'Todos' && item.axis !== selectedAxis) return false;
+    if (selectedTrl === 'Ideação & Pesquisa (TRL 1-3)' && (item.trl > 3)) return false;
+    if (selectedTrl === 'Validação & Piloto (TRL 4-6)' && (item.trl < 4 || item.trl > 6)) return false;
+    if (selectedTrl === 'Operacional & Mercado (TRL 7-9)' && (item.trl < 7)) return false;
+    return true;
+  });
+
+  const countries = ['Todos', ...new Set(innovationsData.map(d => d.country))];
+  const trlFilters = ['Todos', 'Ideação & Pesquisa (TRL 1-3)', 'Validação & Piloto (TRL 4-6)', 'Operacional & Mercado (TRL 7-9)'];
+
+  const getLabelPos = (angleDeg, radius) => {
+    const angleRad = angleDeg * (Math.PI / 180);
+    return {
+      x: Math.cos(angleRad) * radius,
+      y: Math.sin(angleRad) * radius
+    };
+  };
+
+  return (
+    <div className="flex flex-col h-full gap-4 pb-12 w-full">
+      <SectionHeader title="Radar de Inovação" subtitle="Tecnologias de Fronteira" icon={Target} />
+      <DidacticIntro text="Este radar projeta as inovações com base no Nível de Maturidade Tecnológica (TRL - Technology Readiness Level). Soluções no centro estão em fase inicial de pesquisa (TRL 1-3), enquanto nas bordas estão aplicadas no mercado e uso clínico real (TRL 7-9)." />
+
+      <div className="flex flex-wrap lg:flex-nowrap gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm shrink-0 mb-4 items-center">
+         <div className="flex items-center gap-2 shrink-0"><FilterX className="w-5 h-5 text-blue-600"/><label className="font-black text-slate-800 text-sm uppercase tracking-tighter hidden md:block">Filtros:</label></div>
+         <select value={selectedCountry} onChange={e => {setSelectedCountry(e.target.value); setSelectedCard(null)}} className="flex-1 min-w-[150px] bg-white border border-slate-300 text-slate-900 text-xs font-bold uppercase tracking-tight rounded-xl py-2 px-3 cursor-pointer outline-none focus:border-blue-500">
+           {countries.map(c => <option key={c} value={c}>{c === 'Todos' ? '🌐 Todas as Nações' : c}</option>)}
+         </select>
+         <select value={selectedAxis} onChange={e => {setSelectedAxis(e.target.value); setSelectedCard(null)}} className="flex-1 min-w-[150px] bg-white border border-slate-300 text-slate-700 text-xs font-bold uppercase tracking-tight rounded-xl py-2 px-3 cursor-pointer outline-none focus:border-blue-500">
+           <option value="Todos">🎯 Todos os Eixos</option>
+           {Object.keys(axisColors).map(a => <option key={a} value={a}>{String(a)}</option>)}
+         </select>
+         <select value={selectedTrl} onChange={e => {setSelectedTrl(e.target.value); setSelectedCard(null)}} className="flex-1 min-w-[150px] bg-white border border-slate-300 text-slate-700 text-xs font-bold uppercase tracking-tight rounded-xl py-2 px-3 cursor-pointer outline-none focus:border-blue-500">
+           {trlFilters.map(t => <option key={t} value={t}>{String(t)}</option>)}
+         </select>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-[500px]">
+        <div className="lg:w-1/2 bg-slate-900 rounded-[32px] shadow-xl p-4 relative flex flex-col items-center justify-center overflow-hidden border-4 border-slate-800 min-h-[400px]">
+           <svg viewBox="-320 -320 640 640" className="w-full h-full max-h-[500px] drop-shadow-2xl font-sans">
+              <circle r="80" fill="#1e293b" stroke="#334155" strokeWidth="1" strokeDasharray="4 4" />
+              <circle r="160" fill="none" stroke="#334155" strokeWidth="1" strokeDasharray="4 4" />
+              <circle r="240" fill="none" stroke="#475569" strokeWidth="2" />
+              <text x="5" y="-85" fill="#64748b" fontSize="10" fontWeight="bold">TRL 3</text>
+              <text x="5" y="-165" fill="#64748b" fontSize="10" fontWeight="bold">TRL 6</text>
+              <text x="5" y="-245" fill="#94a3b8" fontSize="10" fontWeight="bold">TRL 9 (Uso Real)</text>
+
+              {Object.keys(axisColors).map((axis, i) => {
+                 const angleDeg = i * (360 / Object.keys(axisColors).length);
+                 const lineEnd = getLabelPos(angleDeg, 240);
+                 const textPos = getLabelPos(angleDeg + 30, 260); 
+                 let textAnchor = "middle";
+                 if (textPos.x > 80) textAnchor = "start";
+                 else if (textPos.x < -80) textAnchor = "end";
+                 return (
+                   <g key={`axis-${i}`}>
+                     <line x1="0" y1="0" x2={lineEnd.x} y2={lineEnd.y} stroke="#334155" strokeWidth="1.5" />
+                     <text x={textPos.x} y={textPos.y} fill={axisColors[axis]} fontSize="8" fontWeight="900" textAnchor={textAnchor} className="uppercase tracking-widest">{String(axis)}</text>
+                   </g>
+                 )
+              })}
+
+              {innovationsData.map((item, i) => {
+                 const isVisible = filteredData.includes(item);
+                 const axisIndex = Object.keys(axisColors).indexOf(item.axis);
+                 const trlRatio = item.trl / 9;
+                 const radius = Math.max(20, trlRatio * 240); 
+                 const angleDeg = (axisIndex * (360 / Object.keys(axisColors).length)) + 30 + ((i % 5 - 2) * 8);
+                 const pos = getLabelPos(angleDeg, radius);
+                 return (
+                   <g key={`dot-${item.id}`} 
+                      className={`transition-all duration-700 cursor-pointer ${isVisible ? 'opacity-100 scale-100' : 'opacity-10 scale-50 pointer-events-none'}`}
+                      onMouseEnter={() => setHoveredDot(item)}
+                      onMouseLeave={() => setHoveredDot(null)}
+                      onClick={() => setSelectedCard(item)}
+                   >
+                      <circle cx={pos.x} cy={pos.y} r={hoveredDot?.id === item.id || selectedCard?.id === item.id ? "14" : "9"} fill={axisColors[item.axis]} stroke="#0f172a" strokeWidth="3" className="drop-shadow-lg" />
+                      {isVisible && <text x={pos.x} y={pos.y + 3} textAnchor="middle" fill="#fff" fontSize="9" fontWeight="900" className="pointer-events-none select-none">{String(item.trl)}</text>}
+                   </g>
+                 );
+              })}
+           </svg>
+        </div>
+
+        <div className="lg:w-1/2 flex flex-col gap-4 overflow-y-auto no-scrollbar" style={{ maxHeight: '600px' }}>
+           {selectedCard ? (
+              <div className="bg-white border-2 border-blue-500 rounded-3xl overflow-hidden shadow-2xl flex flex-col h-full animate-in fade-in zoom-in duration-300 relative">
+                <button onClick={() => setSelectedCard(null)} className="absolute top-3 right-3 bg-white/80 backdrop-blur text-slate-700 hover:text-slate-900 hover:bg-white p-2 rounded-full shadow-md z-20 transition-all">
+                  <FilterX className="w-5 h-5"/>
+                </button>
+                <div className="h-48 w-full relative shrink-0 bg-slate-100">
+                  <img src={String(selectedCard.image)} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent"></div>
+                  <div className="absolute bottom-4 left-6 right-6">
+                    <div className="flex gap-2 mb-2">
+                       <span className="text-[10px] font-black px-2 py-1 rounded bg-blue-600 text-white shadow-lg uppercase tracking-widest">Nível TRL {String(selectedCard.trl)}</span>
+                       <span className="text-[10px] font-black px-2 py-1 rounded bg-white/20 backdrop-blur text-white shadow-lg uppercase tracking-widest truncate">{String(selectedCard.axis)}</span>
+                    </div>
+                    <h3 className="text-xl font-black text-white leading-tight">{String(selectedCard.title)}</h3>
+                  </div>
+                </div>
+                <div className="p-6 flex flex-col flex-1 overflow-y-auto no-scrollbar">
+                  <div className="flex items-center gap-2 mb-4 text-xs font-bold text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <MapPin className="w-4 h-4 text-blue-500" /> <span>{String(selectedCard.country)}</span>
+                    <span className="text-slate-300">|</span>
+                    <Building2 className="w-4 h-4 text-blue-500" /> <span className="truncate">{String(selectedCard.institution)}</span>
+                  </div>
+                  <div className="space-y-4 mb-4">
+                    <div>
+                      <h5 className="text-[10px] uppercase tracking-widest font-black text-slate-400 mb-2 border-b border-slate-100 pb-1">Conceito Técnico</h5>
+                      <p className="text-sm text-slate-700 leading-relaxed font-medium">{String(selectedCard.desc)}</p>
+                    </div>
+                    {selectedCard.impact && (
+                      <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <h5 className="text-[10px] uppercase tracking-widest font-black text-blue-600 mb-1 flex items-center gap-1.5"><Zap className="w-3 h-3"/> Impacto na Prática Médica</h5>
+                        <p className="text-xs text-blue-900 font-bold">{String(selectedCard.impact)}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-auto flex justify-between items-center pt-4 border-t border-slate-100">
+                    <SourceTag source={selectedCard.source} />
+                  </div>
+                </div>
+              </div>
+           ) : (
+             <div className="flex flex-col gap-3">
+               <div className="bg-blue-50 border border-blue-100 p-3 rounded-xl flex items-center justify-between text-blue-800 text-xs font-bold shadow-sm">
+                 <span><i className="fa-solid fa-list-ul mr-2"></i> {filteredData.length} inovações</span>
+                 <span className="opacity-60 font-normal underline">Clique para ver detalhes</span>
+               </div>
+               {filteredData.map((item) => (
+                 <div key={item.id} 
+                      className={`bg-white border-2 rounded-2xl p-3 shadow-sm flex items-center gap-4 transition-all duration-300 cursor-pointer
+                                 ${hoveredDot?.id === item.id ? 'border-blue-400 bg-slate-50 shadow-md scale-[1.01]' : 'border-slate-100 hover:border-slate-200'}`}
+                      onMouseEnter={() => setHoveredDot(item)}
+                      onMouseLeave={() => setHoveredDot(null)}
+                      onClick={() => setSelectedCard(item)}
+                 >
+                    <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 relative shadow-sm border border-slate-200">
+                      <img src={String(item.image)} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-slate-900/20"></div>
+                      <div className="absolute inset-0 flex items-center justify-center text-white text-[10px] font-black">TRL {String(item.trl)}</div>
+                    </div>
+                    <div className="flex flex-col flex-1 overflow-hidden">
+                       <span className="text-[8px] font-black uppercase tracking-widest truncate mb-0.5" style={{ color: axisColors[item.axis] }}>{String(item.axis)}</span>
+                       <h4 className="font-black text-slate-900 text-sm leading-tight truncate mb-1">{String(item.title)}</h4>
+                       <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-500 truncate">
+                          <span>{String(item.country)}</span> <span className="opacity-50">•</span> <span className="truncate">{String(item.institution)}</span>
+                       </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-slate-300 shrink-0" />
+                 </div>
+               ))}
+             </div>
+           )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- 3. COMPONENTE PRINCIPAL (APP) ---
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState(TABS[0].id);
+  const [activeCountryId, setActiveCountryId] = useState('us'); 
+  const [activeStateId, setActiveStateId] = useState('sp'); 
+
+  const activeIndex = TABS.findIndex(t => t.id === activeTab);
+  
+  const goToNext = () => { if (activeIndex < TABS.length - 1) setActiveTab(TABS[activeIndex + 1].id); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const goToPrev = () => { if (activeIndex > 0) setActiveTab(TABS[activeIndex - 1].id); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+  return (
+    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden flex flex-col font-sans">
+      
+      {/* Hero Section */}
+      <header className="bg-slate-900 text-white py-10 px-8 lg:px-12 border-b-8 border-blue-600 relative overflow-hidden shrink-0">
+        <Dna className="absolute top-0 right-0 w-80 h-80 -mt-16 -mr-16 text-blue-400 opacity-10 pointer-events-none" />
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+          <div className="md:w-3/5 text-center md:text-left">
+            <div className="inline-block px-4 py-1.5 bg-blue-600/30 border border-blue-400/50 rounded-full text-blue-200 text-[10px] font-black tracking-widest uppercase mb-4 shadow-xl">
+              PANORAMA ESTRATÉGICO 2025-2026
+            </div>
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-none mb-3 uppercase">
+              A NOVA INDÚSTRIA <span className="text-blue-400">DA SAÚDE</span>
+            </h1>
+            <p className="text-base md:text-lg text-slate-300 font-light max-w-2xl leading-relaxed mx-auto md:mx-0">
+              Análise competitiva baseada em Pesquisa de Alto Impacto, Eficiência Hospitalar e Soberania Biotecnológica.
+            </p>
+          </div>
+          <div className="md:w-2/5 flex flex-col items-end gap-6 w-full">
+            <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl shadow-xl border border-white/20 self-center md:self-end">
+              <img src="https://i.postimg.cc/GpHfCP47/gti-det-white.png" alt="Logo GTI-DET" className="h-8 md:h-12 object-contain" />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 w-full">
+              {globalStats.map((stat, i) => (
+                <div key={i} className="bg-white/10 p-3 rounded-2xl border border-white/20 backdrop-blur-md shadow-lg text-center flex flex-col justify-center min-h-[85px]">
+                  <div className="text-xl font-black text-white leading-none mb-1">{String(stat.value)}</div>
+                  <div className="text-[8px] text-blue-200 font-bold uppercase tracking-tight leading-tight">{String(stat.label)}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="max-w-7xl mx-auto px-6 py-6 w-full flex-1 flex flex-col bg-white">
+        
+        {/* Navigation Control Bar */}
+        <div className="flex items-center gap-3 mb-8 shrink-0">
+          <button onClick={goToPrev} disabled={activeIndex === 0} className="p-3 rounded-xl bg-slate-100 border border-slate-200 hover:bg-blue-600 hover:text-white disabled:opacity-20 shadow-md transition-all"><ChevronLeft className="w-6 h-6" /></button>
+          <div className="flex-1 flex gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner overflow-x-auto no-scrollbar">
+            {TABS.map((tab) => {
+              const IconComp = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 min-w-[130px] flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-black transition-all ${activeTab === tab.id ? 'bg-white text-slate-900 shadow-lg scale-[1.02]' : 'text-slate-500 hover:bg-slate-200 uppercase tracking-widest'}`}
+                >
+                  <IconComp className={`w-4 h-4 shrink-0 ${activeTab === tab.id ? 'text-blue-600' : ''}`} /> <span className="whitespace-nowrap">{String(tab.label)}</span>
+                </button>
+              );
+            })}
+          </div>
+          <button onClick={goToNext} disabled={activeIndex === TABS.length - 1} className="p-3 rounded-xl bg-slate-100 border border-slate-200 hover:bg-blue-600 hover:text-white disabled:opacity-20 shadow-md transition-all"><ChevronRight className="w-6 h-6" /></button>
+        </div>
+
+        {/* Sliding Viewport */}
+        <div className="relative overflow-hidden w-full flex-1">
+          <div className="flex transition-transform duration-700 ease-in-out items-start w-full" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+            
+            {/* SLIDE 1: Global Trends (Interactive Reveal) */}
+            <div className={`w-full shrink-0 px-2 transition-opacity duration-700 ${activeIndex === 0 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+              <SectionHeader title="Tendências Globais" icon={TrendingUp} />
+              <DidacticIntro text="Passe o mouse ou toque nos cartões para revelar dados de impacto e insights de mercado. A nova indústria é movida pela convergência entre bits (digital) e átomos (biologia)." />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {trends.map((trend, i) => (
+                  <div key={i} className="flex flex-col border-2 border-slate-50 rounded-[32px] bg-white overflow-hidden shadow-xl group relative h-[380px] perspective-1000">
+                    
+                    {/* Frente do Card */}
+                    <div className="flex flex-col h-full transition-all duration-500 group-hover:opacity-0 group-hover:scale-95">
+                      <div className="h-44 w-full relative overflow-hidden bg-slate-100 shrink-0">
+                        <img src={String(trend.image)} alt={String(trend.title)} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                        <div className="absolute bottom-4 left-4 bg-white/10 backdrop-blur-md p-2 rounded-xl border border-white/20 flex items-center gap-2">
+                           <div className="text-2xl font-black text-white">{trend.bigNumber}</div>
+                           <div className="text-[7px] leading-tight font-bold text-blue-200 uppercase">{trend.metric}</div>
+                        </div>
+                      </div>
+                      <div className="p-5 flex-1 flex flex-col">
+                        <h3 className="text-lg font-black text-slate-900 leading-tight mb-2 uppercase tracking-tighter">{String(trend.title)}</h3>
+                        <p className="text-slate-600 text-[11px] leading-relaxed flex-1 font-medium">{String(trend.desc)}</p>
+                        <div className="mt-4 flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-blue-600">
+                          <span>Ver Insight Estratégico <ArrowRight className="inline w-3 h-3 ml-1"/></span>
+                          <span className="opacity-40">{trend.source.split(' / ')[0]}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Verso do Card (Overlay de Insight) */}
+                    <div className="absolute inset-0 bg-slate-900 p-6 flex flex-col justify-center translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
+                      <div className="flex items-center gap-3 mb-4 border-b border-white/10 pb-3">
+                        <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                          <Zap className="text-white w-5 h-5" />
+                        </div>
+                        <h4 className="text-white font-black uppercase tracking-widest text-xs">Insight de Mercado</h4>
+                      </div>
+                      
+                      <p className="text-blue-50 text-sm leading-relaxed font-medium mb-6">
+                        {trend.insight}
+                      </p>
+
+                      <div className="bg-white/5 border border-white/10 p-4 rounded-2xl mb-4">
+                        <div className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1 flex items-center gap-2">
+                          <TrendingUp className="w-3 h-3"/> Projeção Estratégica
+                        </div>
+                        <p className="text-white text-xs font-bold leading-snug">
+                          {trend.data}
+                        </p>
+                      </div>
+
+                      <div className="mt-auto">
+                        <SourceTag source={trend.source} />
+                      </div>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SLIDE 2: Potências Mundiais (Updated with Detailed Content) */}
+            <div className={`w-full shrink-0 px-2 transition-opacity duration-700 ${activeIndex === 1 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+              <SectionHeader title="Matriz de Liderança" icon={Globe} />
+              <DidacticIntro 
+                title="Metodologia do Ranking Global"
+                text="O ranking avalia a integração entre Ciência & Tecnologia (Nature Index 2025), Qualidade Assistencial (Ranking Newsweek e WIHI), Inovação Industrial (GII da WIPO) e Sustentabilidade Fiscal do sistema de saúde."
+              />
+              <div className="mb-6 flex flex-col md:flex-row items-center justify-between bg-slate-50 p-3 rounded-2xl border-2 border-slate-100 shadow-sm gap-3">
+                <div className="flex items-center gap-3 px-3"><MapPin className="w-5 h-5 text-blue-600" /><label className="font-black text-slate-800 text-sm uppercase tracking-tighter">Analisar Nação:</label></div>
+                <div className="relative w-full md:w-80">
+                  <select value={activeCountryId} onChange={(e) => setActiveCountryId(e.target.value)} className="appearance-none w-full bg-white border border-slate-200 text-slate-900 font-black text-base rounded-xl py-2 px-4 cursor-pointer outline-none focus:border-blue-600 shadow-md">
+                    {top10.map((card) => (<option key={card.id} value={card.id}>{String(card.rank)}º - {String(card.name)}</option>))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                </div>
+              </div>
+
+              <InteractiveMap selectedId={activeCountryId} onSelect={setActiveCountryId} mapData={mapDataGlobal} title="Geopolítica Global 2025" mapImage="https://i.postimg.cc/Bbm1W0xq/mapa-mundi.jpg" />
+
+              <div className="mt-8">
+                {top10.filter(item => item.id === activeCountryId).map((selectedData) => (
+                  <div key={selectedData.id} className="flex flex-col lg:flex-row bg-white border-2 border-slate-50 rounded-[32px] overflow-hidden shadow-2xl group min-h-[450px]">
+                    <div className="bg-slate-900 text-white w-full lg:w-48 p-6 flex flex-col justify-center items-center shrink-0 text-center">
+                      <span className="text-[12px] font-black uppercase tracking-widest text-blue-400 mb-2">POSIÇÃO</span>
+                      <span className="text-7xl font-black leading-none drop-shadow-xl">#{String(selectedData.rank)}</span>
+                    </div>
+                    <div className="w-full lg:w-[400px] shrink-0 relative bg-slate-200 border-r border-slate-50">
+                      <img src={String(selectedData.image)} alt={String(selectedData.name)} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" />
+                      <div className="absolute bottom-4 left-4 right-4 bg-blue-600/90 backdrop-blur-xl text-white text-[10px] font-black p-3 rounded-xl border border-white/20 shadow-2xl uppercase tracking-widest text-center">
+                        {String(selectedData.specialty)}
+                      </div>
+                    </div>
+                    <div className="p-8 flex-1 flex flex-col justify-center">
+                      <div className="flex items-center gap-3 border-b-2 border-slate-100 pb-4 mb-4">
+                        <Award className="w-8 h-8 text-yellow-500" /> 
+                        <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tighter leading-none">{String(selectedData.name)}</h4>
+                      </div>
+                      <strong className="block text-sm text-blue-600 mb-2 uppercase tracking-tighter font-black">{String(selectedData.axis)}</strong>
+                      <p className="text-slate-700 text-sm leading-relaxed mb-6 font-medium">{String(selectedData.detail)}</p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 h-full">
+                          <strong className="block text-[10px] text-slate-400 uppercase tracking-widest mb-1.5"><Building2 className="inline w-3 h-3 mr-1"/> Instituições-Chave</strong>
+                          <p className="text-xs text-slate-700 leading-snug font-bold">{String(selectedData.keyInstitutions)}</p>
+                        </div>
+                        <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 h-full">
+                          <strong className="block text-[10px] text-blue-600 uppercase tracking-widest mb-1.5"><Rocket className="inline w-3 h-3 mr-1"/> Avanços de Fronteira</strong>
+                          <p className="text-xs text-slate-800 leading-snug font-medium">{String(selectedData.strongAdvances)}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-blue-50 border-l-[8px] border-blue-500 p-4 rounded-r-2xl mb-6 shadow-inner">
+                        <p className="text-sm text-slate-800 leading-relaxed font-bold italic">"{String(selectedData.note)}"</p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        {selectedData.stats.map((stat, i) => (
+                          <div key={i} className="bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5 text-[10px] font-black text-slate-800 uppercase tracking-tighter shadow-sm">{String(stat)}</div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SLIDE 3: Brasil - Matriz Nacional */}
+            <div className={`w-full shrink-0 px-2 transition-opacity duration-700 ${activeIndex === 2 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+              <SectionHeader title="Ecossistema Nacional" icon={MapPin} />
+              <DidacticIntro 
+                title="Metodologia do Ranking Nacional"
+                text="O ranking brasileiro avalia a concentração de Hospitais de Referência (Newsweek), o volume de Pesquisa Científica de alto impacto (Nature Index 2025) e a força do Polo Industrial Farmacêutico estadual estratégico para o SUS."
+              />
+              
+              <div className="mb-6 flex flex-col md:flex-row items-center justify-between bg-slate-50 p-3 rounded-2xl border-2 border-slate-100 shadow-sm gap-3">
+                <div className="flex items-center gap-3 px-3"><MapPin className="w-5 h-5 text-emerald-600" /><label className="font-black text-slate-800 text-sm uppercase tracking-tighter">Analisar Estado:</label></div>
+                <div className="relative w-full md:w-80">
+                  <select value={activeStateId} onChange={(e) => setActiveStateId(e.target.value)} className="appearance-none w-full bg-white border border-slate-200 text-slate-900 font-black text-base rounded-xl py-2 px-4 cursor-pointer outline-none focus:border-emerald-600 shadow-md">
+                    {brazilTop10States.map((card) => (<option key={card.id} value={card.id}>{String(card.rank)}º - {String(card.name)}</option>))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                </div>
+              </div>
+
+              <InteractiveMap selectedId={activeStateId} onSelect={setActiveStateId} mapData={mapDataBrazil} title="Polos de Inovação Brasil" mapImage="https://i.postimg.cc/hGLkN593/mapa-brasil.avif" aspectClass="aspect-square md:aspect-[4/3]" />
+
+              <div className="mt-8">
+                {brazilTop10States.filter(item => item.id === activeStateId).map((selectedData) => (
+                  <div key={selectedData.id} className="flex flex-col lg:flex-row bg-white border-2 border-slate-50 rounded-[32px] overflow-hidden shadow-2xl group min-h-[400px]">
+                    <div className="bg-slate-900 text-white w-full lg:w-48 p-6 flex flex-col justify-center items-center shrink-0">
+                      <span className="text-7xl font-black leading-none drop-shadow-xl">#{String(selectedData.rank)}</span>
+                    </div>
+                    <div className="w-full lg:w-[400px] shrink-0 relative bg-slate-200 border-r border-slate-50">
+                      <img src={String(selectedData.image)} alt={String(selectedData.name)} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" />
+                    </div>
+                    <div className="p-8 flex-1 flex flex-col justify-center">
+                      <div className="flex items-center gap-3 border-b-2 border-slate-100 pb-4 mb-4">
+                        <Award className="w-8 h-8 text-emerald-500" /> 
+                        <h4 className="text-2xl font-black text-slate-900 uppercase tracking-tighter leading-none">{String(selectedData.name)}</h4>
+                      </div>
+                      <strong className="block text-sm text-emerald-600 mb-2 uppercase tracking-tighter font-black"><Layers className="inline w-4 h-4 mr-1"/> {String(selectedData.axis)}</strong>
+                      <p className="text-slate-700 text-sm leading-relaxed mb-4 font-medium">{String(selectedData.detail)}</p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 h-full">
+                          <strong className="block text-[10px] text-slate-400 uppercase tracking-widest mb-1.5"><Building2 className="inline w-3 h-3 mr-1"/> Instituições-Chave</strong>
+                          <p className="text-xs text-slate-700 leading-snug font-bold">{String(selectedData.keyInstitutions)}</p>
+                        </div>
+                        <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 h-full">
+                          <strong className="block text-[10px] text-emerald-600 uppercase tracking-widest mb-1.5"><Rocket className="inline w-3 h-3 mr-1"/> Avanços & Indicadores</strong>
+                          <p className="text-xs text-slate-800 leading-snug font-medium">{String(selectedData.stats[0])} • {String(selectedData.stats[1])}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-emerald-50 border-l-[8px] border-emerald-500 p-4 rounded-r-2xl mb-6 shadow-inner">
+                        <p className="text-sm text-slate-800 leading-relaxed font-bold italic">"{String(selectedData.note)}"</p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        {selectedData.stats.map((stat, i) => (
+                          <div key={i} className="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-[10px] font-black text-slate-800 uppercase tracking-tighter shadow-sm">{String(stat)}</div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SLIDE 4: Radar de Maturidade */}
+            <div className={`w-full shrink-0 px-2 transition-opacity duration-700 ${activeIndex === 3 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+               <RadarTab />
+            </div>
+
+          </div>
+        </div>
+      </main>
+
+      <footer className="bg-slate-900 text-slate-400 py-6 px-12 border-t-4 border-blue-600 shrink-0 mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+          <div>
+            <h5 className="font-black text-white text-sm uppercase tracking-tighter mb-1">Painel Estratégico de Inteligência na Saúde</h5>
+            <p className="text-[11px] font-medium opacity-60">Base de Dados: Nature Index 2025, Newsweek/Statista Hospitals, WIHI 2024, Global Innovation Index (WIPO), Deloitte.</p>
+          </div>
+          <div className="flex flex-col items-center md:items-end">
+            <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Atualização Permanente</div>
+            <div className="text-xl font-black text-blue-400 uppercase tracking-tighter leading-none">MAIO / 2026</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
