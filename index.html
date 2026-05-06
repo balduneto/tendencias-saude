@@ -133,20 +133,80 @@ const mapDataBrazil = [
 ];
 
 const axisColors = {
-  'Saúde Digital & IA': '#3b82f6',
-  'Genômica & Precisão': '#8b5cf6',
-  'Biotecnologia & Terapias': '#ec4899',
-  'MedTech & Dispositivos': '#f59e0b',
+  'Saúde Digital & Inteligência Artificial (IA)': '#3b82f6',
+  'Genômica & Medicina de Precisão': '#8b5cf6',
+  'Biotecnologia & Terapias Moleculares': '#ec4899',
+  'MedTech & Dispositivos Biomédicos': '#f59e0b',
   'Saúde Pública e Vacinas': '#10b981',
-  'Robótica & Regenerativa': '#14b8a6'
+  'Robótica & Medicina Regenerativa': '#14b8a6'
 };
 
+const axisImages = {
+  'Saúde Digital & Inteligência Artificial (IA)': 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=800&q=80',
+  'Genômica & Medicina de Precisão': 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80',
+  'Biotecnologia & Terapias Moleculares': 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80',
+  'MedTech & Dispositivos Biomédicos': 'https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=800&q=80',
+  'Saúde Pública e Vacinas': 'https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&w=800&q=80',
+  'Robótica & Medicina Regenerativa': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80'
+};
+
+// 55 Projetos de Fronteira Estratégica (Radar TRL)
 const innovationsData = [
-  { id: 'inv1', title: 'Discovery Accelerator Quantum (Computação Quântica)', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic + IBM', axis: 'Saúde Digital & IA', trl: 6, desc: 'Utiliza computadores quânticos para simular interações entre vírus e proteínas em segundos. Isso permite prever a eficácia de novos medicamentos antes dos testes físicos.', impact: 'Acelera a descoberta de fármacos para doenças raras em até 10 vezes.', image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80', source: 'Cleveland Clinic' },
-  { id: 'inv4', title: 'FoundationOne® Liquid CDx (Biópsia Líquida)', country: 'Suíça 🇨🇭', institution: 'Roche', axis: 'Genômica & Precisão', trl: 9, desc: 'Teste de sangue que detecta DNA de tumores circulando na corrente sanguínea. Permite identificar mutações genéticas específicas do câncer sem biópsias invasivas.', impact: 'Indicação imediata da terapia-alvo correta, aumentando as chances de cura.', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80', source: 'Roche / FDA' },
-  { id: 'inv22', title: 'Terapia CAR-T Nacional (Reprogramação Celular)', country: 'Brasil 🇧🇷', institution: 'USP / Butantan', axis: 'Biotecnologia & Terapias', trl: 7, desc: 'Técnica que "ensina" as células do paciente a destruir o câncer. O Brasil criou um método nacional para baratear este tratamento de milhões para milhares de reais.', impact: 'Acesso democrático no SUS a um dos tratamentos mais caros do mundo.', image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80', source: 'USP / Anvisa' },
-  { id: 'inv23', title: 'Vacina contra Dengue Dose Única', country: 'Brasil 🇧🇷', institution: 'Instituto Butantan', axis: 'Saúde Pública e Vacinas', trl: 9, desc: 'Primeiro imunizante brasileiro de dose única que protege contra os 4 sorotipos da dengue. Facilita campanhas de vacinação em massa.', impact: 'Soberania nacional na produção de imunizantes estratégicos.', image: 'https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&w=800&q=80', source: 'Butantan' },
-  { id: 'inv28', title: 'Neurocirurgia Estereotáxica Robótica', country: 'Brasil 🇧🇷', institution: 'HC-UFG', axis: 'Robótica & Regenerativa', trl: 8, desc: 'Uso de braços robóticos submilimétricos para implantar eletrodos cerebrais para epilepsia. O robô elimina erros manuais e reduz o tempo de cirurgia.', impact: 'Segurança absoluta em cirurgias cerebrais de alta complexidade no SUS.', image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80', source: 'UFG / HC-Ebserh' },
+  { id: 'inv1', title: 'Casgevy (exa-cel)', country: 'Estados Unidos 🇺🇸', institution: 'CRISPR Therapeutics / Vertex', axis: 'Genômica & Medicina de Precisão', trl: 9, desc: 'Terapia CRISPR para curar anemia falciforme e beta-talassemia editando genes em laboratório e devolvendo ao paciente.', impact: 'Aprovado FDA + MHRA dez/2023.', source: 'Vertex', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv2', title: 'CAR-T Kymriah', country: 'Estados Unidos 🇺🇸', institution: 'Novartis / UPenn', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Terapia de células T reprogramadas para tratar leucemia linfóide aguda e linfoma difuso.', impact: 'Aprovado com reembolso na UE.', source: 'Novartis', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv3', title: 'AlphaFold 3', country: 'Iniciativa Global 🌐', institution: 'Google DeepMind / EMBL-EBI', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 9, desc: 'Modelo de IA que previu mais de 200 milhões de estruturas proteicas, acelerando o Drug Design e P&D mundial.', impact: 'Plataforma aberta com 1,7M usuários.', source: 'Google DeepMind', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv4', title: 'WGS Integrado ao NHS', country: 'Reino Unido 🇬🇧', institution: 'NHS / Genomics England', axis: 'Genômica & Medicina de Precisão', trl: 9, desc: 'Sequenciamento Genômico Completo (WGS) inserido no serviço público (100K Genomes Project).', impact: 'Operacional com meta de 5M genomas.', source: 'Genomics England', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv5', title: 'ButanVac Dengue', country: 'Brasil 🇧🇷', institution: 'Instituto Butantan', axis: 'Saúde Pública e Vacinas', trl: 9, desc: 'Vacina contra dengue de dose única, estabelecendo a soberania nacional em imunobiológicos.', impact: 'Aprovada ANVISA (lançamento SUS 2025).', source: 'Butantan', image: axisImages['Saúde Pública e Vacinas'] },
+  { id: 'inv6', title: 'Zolgensma', country: 'Suíça 🇨🇭', institution: 'Novartis / AveXis', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Terapia gênica vetorial (AAV) para Atrofia Muscular Espinhal (AME) tipo 1.', impact: 'Aprovado FDA + EMA (Custo US$2,1M/dose).', source: 'Novartis', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv7', title: 'Trastuzumabe Deruxtecan (T-DXd)', country: 'Suécia 🇸🇪', institution: 'AstraZeneca / Daiichi Sankyo', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Anticorpo conjugado oncológico altamente direcionado para tumores HER2 positivos.', impact: 'Aprovado para múltiplas indicações.', source: 'AstraZeneca', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv8', title: 'Luxturna', country: 'Holanda 🇳🇱', institution: 'Spark Therapeutics / LUMC', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Primeira terapia gênica ocular corretiva in vivo para cegueira hereditária.', impact: 'Aprovado FDA + EMA.', source: 'LUMC', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv9', title: 'Tirzepatide (Mounjaro/Zepbound)', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic / Eli Lilly', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Agonista duplo GLP-1+GIP alterando a abordagem global contra diabetes e obesidade severa.', impact: 'Aprovado FDA (2022-23).', source: 'Eli Lilly', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv10', title: 'PSMA PET Scan', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic / Blue Earth', axis: 'MedTech & Dispositivos Biomédicos', trl: 9, desc: 'Diagnóstico por imagem e estadiamento molecular ultrapreciso para câncer de próstata.', impact: 'Aprovado FDA (Uso rotineiro).', source: 'Cleveland Clinic', image: axisImages['MedTech & Dispositivos Biomédicos'] },
+  { id: 'inv11', title: 'Brexanolone (Zulresso)', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic / Sage Ther.', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Primeiro tratamento de ação rápida (60 horas) específico para depressão pós-parto.', impact: 'Aprovado FDA (ação única).', source: 'Sage Therapeutics', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv12', title: 'Mavacamten (Camzyos)', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic / BMS', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Primeira medicação molecular direcionada especificamente à cardiomiopatia hipertrófica.', impact: 'Aprovado FDA maio/2022.', source: 'BMS', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv13', title: 'Fezolinetant (Veozah)', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic / Astellas', axis: 'Biotecnologia & Terapias Moleculares', trl: 9, desc: 'Antagonista não-hormonal NK3R inovador para tratamento dos sintomas da menopausa.', impact: 'Aprovado FDA maio/2023.', source: 'Astellas Pharma', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv14', title: 'Inclisiran', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic / Novartis', axis: 'Genômica & Medicina de Precisão', trl: 9, desc: 'Terapia de RNA de interferência (siRNA) que reduz agressivamente o LDL com injeções semestrais.', impact: 'Aprovado FDA dez/2021.', source: 'Novartis', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv15', title: 'Vacina Personalizada mRNA-4157', country: 'Estados Unidos 🇺🇸', institution: 'Moderna / Merck', axis: 'Biotecnologia & Terapias Moleculares', trl: 8, desc: 'Vacina de mRNA desenhada exclusivamente para as mutações do tumor do paciente.', impact: 'Fase 3 em melanoma e câncer de pulmão.', source: 'Moderna', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv16', title: 'All of Us Research Program', country: 'Estados Unidos 🇺🇸', institution: 'NIH', axis: 'Genômica & Medicina de Precisão', trl: 8, desc: 'Mapeamento genômico nacional com 786 mil amostras genéticas diversificadas e integradas.', impact: '786K participantes (2024).', source: 'NIH', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv17', title: 'Xenotransplante CRISPR', country: 'Estados Unidos 🇺🇸', institution: 'Mass General Hospital', axis: 'Robótica & Medicina Regenerativa', trl: 8, desc: 'Transplante bem-sucedido de um rim de suíno editado geneticamente para um paciente humano vivo.', impact: '47 dias funcional (NEJM 2024).', source: 'MGH / NEJM', image: axisImages['Robótica & Medicina Regenerativa'] },
+  { id: 'inv18', title: 'UK Biobank WGS', country: 'Reino Unido 🇬🇧', institution: 'MRC / Wellcome Trust', axis: 'Genômica & Medicina de Precisão', trl: 8, desc: 'Liberação de 500 mil genomas completos combinados a dados clínicos longitudinais.', impact: 'Dados abertos para pesquisa global.', source: 'UK Biobank', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv19', title: 'Vacinas mRNA Oncológicas (BNT111)', country: 'Alemanha 🇩🇪', institution: 'BioNTech SE', axis: 'Biotecnologia & Terapias Moleculares', trl: 8, desc: 'Expansão da tecnologia de RNA mensageiro para combater tumores agressivos no pâncreas.', impact: 'Fase 2/3 em andamento acelerado.', source: 'BioNTech', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv20', title: 'Banco Genômico da Ásia (100M)', country: 'China 🇨🇳', institution: 'BGI Genomics', axis: 'Genômica & Medicina de Precisão', trl: 8, desc: 'Maior empreendimento de sequenciamento genético massivo populacional integrado à IA.', impact: 'Ativo sob a iniciativa "Healthy China 2030".', source: 'BGI Genomics', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv21', title: 'BCI Implantável', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic (Hazen Lab)', axis: 'MedTech & Dispositivos Biomédicos', trl: 8, desc: 'Interface Cérebro-Computador que decodifica sinais neurais em movimentos físicos precisos.', impact: 'Ensaio clínico fase 2 avançada.', source: 'Cleveland Clinic', image: axisImages['MedTech & Dispositivos Biomédicos'] },
+  { id: 'inv22', title: 'IA Preditiva de Sepse', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic AI Lab', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 8, desc: 'Algoritmo contínuo em UTIs para identificar infecção generalizada horas antes dos sinais vitais caírem.', impact: 'Operacional e salvando vidas reais.', source: 'Cleveland Clinic', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv23', title: 'Emirati Genome Program (IA)', country: 'Emirados Árabes 🇦🇪', institution: 'Cleveland Clinic / G42', axis: 'Genômica & Medicina de Precisão', trl: 8, desc: 'Maior banco genômico do Oriente Médio, processado integralmente por supercomputadores de IA.', impact: 'Ativo em 480 clínicas em 26 países.', source: 'G42', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv24', title: 'IA Diagnóstica NHS', country: 'Reino Unido 🇬🇧', institution: 'NHS AI Lab / DeepMind', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 7, desc: 'Sistemas inteligentes integrados à rede pública analisando mamografias e tomografias torácicas.', impact: 'Operacional em 126 hospitais britânicos.', source: 'NHS AI Lab', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv25', title: 'NTLA-2001 (CRISPR in vivo)', country: 'Estados Unidos 🇺🇸', institution: 'Intellia Therapeutics', axis: 'Genômica & Medicina de Precisão', trl: 7, desc: 'Edição genética infundida diretamente na veia do paciente para tratar amiloidose ATTR cardíaca.', impact: 'Fase 3 com >90% de redução na proteína alvo.', source: 'Intellia', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv26', title: 'IA Multi-órgão em Massa', country: 'China 🇨🇳', institution: 'West China Hospital', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 7, desc: 'Rede neural treinada para cruzar dados de todos os órgãos simultaneamente em avaliações de risco.', impact: 'Validado em 3 milhões de pacientes chineses.', source: 'Sichuan Univ.', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv27', title: 'SERA (IA Sepse UTI)', country: 'Singapura 🇸🇬', institution: 'Duke-NUS / SingHealth', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 7, desc: 'Módulo de predição de agravamento na UTI integrado diretamente no prontuário eletrônico.', impact: 'Em processo de implantação nacional.', source: 'SingHealth', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv28', title: 'Coração Artificial Total (TAH)', country: 'Canadá 🇨🇦', institution: 'Toronto General / UHN', axis: 'MedTech & Dispositivos Biomédicos', trl: 7, desc: 'Prótese cardíaca completa de nova geração que se ajusta automaticamente ao fluxo fisiológico.', impact: 'Ensaio clínico fase 2/3 em humanos.', source: 'UHN', image: axisImages['MedTech & Dispositivos Biomédicos'] },
+  { id: 'inv29', title: 'Robô Endoscópico Nanométrico', country: 'Japão 🇯🇵', institution: 'Univ. Tokyo / AMED', axis: 'Robótica & Medicina Regenerativa', trl: 7, desc: 'Braços robóticos flexíveis que realizam cirurgias dentro do estômago com precisão microscópica.', impact: 'Aprovação governamental japonesa em curso.', source: 'AMED Japan', image: axisImages['Robótica & Medicina Regenerativa'] },
+  { id: 'inv30', title: 'CAR-T Integrado ao SUS', country: 'Brasil 🇧🇷', institution: 'INCA / A.C. Camargo', axis: 'Biotecnologia & Terapias Moleculares', trl: 7, desc: 'Iniciativa multicêntrica pública para fornecer análise genômica tumoral e terapia celular no SUS.', impact: 'Ensaios fase 2 ativos no setor público.', source: 'INCA', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv31', title: 'Anatomopatologia IA', country: 'Estados Unidos 🇺🇸', institution: 'Mayo Clinic / NVIDIA', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 7, desc: 'Mais de 20 milhões de lâminas de tecido digitalizadas para treinar IA a detectar câncer precoce.', impact: 'Validação ativa ao longo de 2024-2025.', source: 'Mayo Clinic', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv32', title: 'IA Risco Cardiovascular', country: 'Estados Unidos 🇺🇸', institution: 'Mayo Clinic', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 7, desc: 'Algoritmo preditivo validado pela Nature que avalia risco futuro analisando gordura perivalvular.', impact: 'Publicado na Nature em março/2026.', source: 'Mayo Clinic', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv33', title: 'Cardiomiócitos iPSC', country: 'Suécia 🇸🇪', institution: 'Karolinska Institutet', axis: 'Robótica & Medicina Regenerativa', trl: 6, desc: 'Regeneração de músculo cardíaco morto após infarto utilizando células-tronco reprogramadas.', impact: 'Iniciando testes clínicos (Fase 1/2).', source: 'Karolinska', image: axisImages['Robótica & Medicina Regenerativa'] },
+  { id: 'inv34', title: 'CAR-T anti-GD2 Pediátrico', country: 'Holanda 🇳🇱', institution: 'Amsterdam UMC', axis: 'Biotecnologia & Terapias Moleculares', trl: 6, desc: 'Terapia celular avançada voltada especificamente para tumores sólidos agressivos em crianças.', impact: 'Fase 1/2 de validação em andamento.', source: 'Amsterdam UMC', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv35', title: 'CRISPR In Vivo Hepático', country: 'China 🇨🇳', institution: 'BGI / Peking Univ.', axis: 'Genômica & Medicina de Precisão', trl: 6, desc: 'Terapia de edição genética atuando diretamente no fígado para curar hipercolesterolemia severa.', impact: 'Fase 1/2 com resultados promissores.', source: 'Peking University', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv36', title: 'mRNA para Arbovírus Tropicais', country: 'Singapura 🇸🇬', institution: 'A*STAR / NUS', axis: 'Saúde Pública e Vacinas', trl: 6, desc: 'Plataforma asiática de RNA focada em respostas imunes robustas contra dengue e zika.', impact: 'Validação imunológica Fase 1 concluída.', source: 'A*STAR', image: axisImages['Saúde Pública e Vacinas'] },
+  { id: 'inv37', title: 'Asparaginase Modificada', country: 'Brasil 🇧🇷', institution: 'Fiocruz Paraná / ICC', axis: 'Biotecnologia & Terapias Moleculares', trl: 6, desc: 'Enzima humana alterada para tratar leucemia infantil sem as reações alérgicas severas do modelo atual.', impact: 'Patentes concedidas nos EUA e China (2024).', source: 'Fiocruz PR', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv38', title: 'IA Alzheimer por MRI Multimodal', country: 'Alemanha 🇩🇪', institution: 'Charité Berlin / DZNE', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 6, desc: 'Diagnóstico precoce de declínio cognitivo fundindo múltiplos exames de ressonância magnética via IA.', impact: 'Em validação multicêntrica pela União Europeia.', source: 'Charité', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv39', title: 'Folha de Células iPSC', country: 'Japão 🇯🇵', institution: 'RIKEN / Kyoto Univ.', axis: 'Robótica & Medicina Regenerativa', trl: 6, desc: 'Folhas de tecido cardíaco geradas em laboratório e "coladas" no coração falho do paciente humano.', impact: 'Testes Fase 1 bem-sucedidos no Japão.', source: 'RIKEN', image: axisImages['Robótica & Medicina Regenerativa'] },
+  { id: 'inv40', title: 'IA do Microbioma Intestinal', country: 'Estados Unidos 🇺🇸', institution: 'Mayo Clinic (Sung Lab)', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 6, desc: 'Ferramenta que atinge 80% de acurácia em associar assinaturas de bactérias intestinais a doenças crônicas.', impact: 'Ferramenta aberta (Nature Comm. 2024).', source: 'Mayo Clinic', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv41', title: 'TMAO Biomarcador Cardíaco', country: 'Estados Unidos 🇺🇸', institution: 'Cleveland Clinic', axis: 'MedTech & Dispositivos Biomédicos', trl: 6, desc: 'Teste laboratorial que correlaciona o microbioma humano ao risco instantâneo de infarto.', impact: 'Publicações na Science 2024 (Avanço Diagnóstico).', source: 'Cleveland Clinic', image: axisImages['MedTech & Dispositivos Biomédicos'] },
+  { id: 'inv42', title: 'Bioprinting 3D de Cartilagem', country: 'Holanda 🇳🇱', institution: 'UMC Utrecht', axis: 'Robótica & Medicina Regenerativa', trl: 5, desc: 'Impressão 3D de tecidos vascularizados para reconstrução definitiva de cartilagens danificadas.', impact: 'Modelo pré-clínico avançado estruturado.', source: 'UMC Utrecht', image: axisImages['Robótica & Medicina Regenerativa'] },
+  { id: 'inv43', title: 'Base Editing Pediátrico', country: 'Canadá 🇨🇦', institution: 'SickKids / Univ. Toronto', axis: 'Genômica & Medicina de Precisão', trl: 5, desc: 'Edição de precisão (substituição de uma única letra do DNA) focada em distúrbios neurológicos raros.', impact: 'Estágio pré-clínico de fase avançada.', source: 'SickKids', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv44', title: 'Single-Cell Atlas Pan-Tecidual', country: 'Suécia 🇸🇪', institution: 'SciLifeLab', axis: 'Genômica & Medicina de Precisão', trl: 5, desc: 'Mapeamento genético e proteico isolado de absolutamente todos os tipos de células do corpo humano.', impact: 'Disponibilizado na íntegra pela Nature (2024).', source: 'Uppsala Univ.', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv45', title: 'Polilamina Neuromotora', country: 'Brasil 🇧🇷', institution: 'UFRJ / Cristália', axis: 'Biotecnologia & Terapias Moleculares', trl: 5, desc: 'Nova molécula farmacológica nacional para acelerar a religação neural após lesões severas na medula.', impact: 'Resultados expressivos no estágio pré-clínico.', source: 'UFRJ', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv46', title: 'Vacina mRNA Tuberculose', country: 'Alemanha 🇩🇪', institution: 'BioNTech SE', axis: 'Saúde Pública e Vacinas', trl: 5, desc: 'Plataforma que erradicou a COVID focada na mais mortal infecção bacteriana do mundo.', impact: 'Primeiras doses injetadas em humanos (2024).', source: 'BioNTech', image: axisImages['Saúde Pública e Vacinas'] },
+  { id: 'inv47', title: 'Neuromodulação Bioeletrônica', country: 'Estados Unidos 🇺🇸', institution: 'Mayo Clinic (BIONIC)', axis: 'MedTech & Dispositivos Biomédicos', trl: 5, desc: 'Implantes flexíveis no cérebro para regular oscilações extremas em doenças psiquiátricas complexas.', impact: 'Iniciativa estratégica principal para 2025.', source: 'Mayo Clinic', image: axisImages['MedTech & Dispositivos Biomédicos'] },
+  { id: 'inv48', title: 'Painel NGS Raro Neonatal', country: 'Canadá 🇨🇦', institution: 'SickKids / McGill Univ.', axis: 'Genômica & Medicina de Precisão', trl: 4, desc: 'Sequenciamento rápido em UTI pediátrica que revela causas genéticas de colapso em menos de 24 horas.', impact: 'Piloto clínico alterando condutas médicas reais.', source: 'McGill', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv49', title: 'Órgão-em-Chip Multiorgânico', country: 'China 🇨🇳', institution: 'Tsinghua Univ. / SJTU', axis: 'MedTech & Dispositivos Biomédicos', trl: 4, desc: 'Chip microfluídico simulando a interação entre coração, fígado e pulmão para testar toxicidade de remédios.', impact: 'Protótipo funcional validado sem uso animal.', source: 'Tsinghua', image: axisImages['MedTech & Dispositivos Biomédicos'] },
+  { id: 'inv50', title: 'CAR-NK Off-the-Shelf', country: 'Estados Unidos 🇺🇸', institution: 'Fate / Cellectis', axis: 'Biotecnologia & Terapias Moleculares', trl: 4, desc: 'Células "Natural Killers" universais produzidas em massa, dispensando a reprogramação do sangue do próprio doente.', impact: 'Potencial de barateamento radical (Fase 1).', source: 'Fate Therapeutics', image: axisImages['Biotecnologia & Terapias Moleculares'] },
+  { id: 'inv51', title: 'Nanobots Lipídicos (Drug Delivery)', country: 'Japão 🇯🇵', institution: 'RIKEN', axis: 'Robótica & Medicina Regenerativa', trl: 4, desc: 'Nano-robôs de lipídios que viajam pela corrente sanguínea e liberam quimioterapia apenas dentro do tumor.', impact: 'Estudos combinados in vitro e in vivo (ratos).', source: 'Tokyo Medical Univ.', image: axisImages['Robótica & Medicina Regenerativa'] },
+  { id: 'inv52', title: 'Simulação Córtex Cerebral', country: 'Suíça 🇨🇭', institution: 'EPFL Blue Brain Project', axis: 'Saúde Digital & Inteligência Artificial (IA)', trl: 3, desc: 'Reconstrução supercomputacional das conexões físicas e elétricas de tecidos do cérebro humano vivo.', impact: 'Primeiro modelo estrutural publicado em 2024.', source: 'EPFL', image: axisImages['Saúde Digital & Inteligência Artificial (IA)'] },
+  { id: 'inv53', title: 'Plataforma mRNA Soberana', country: 'Brasil 🇧🇷', institution: 'Bio-Manguinhos (Fiocruz)', axis: 'Saúde Pública e Vacinas', trl: 3, desc: 'Desenvolvimento do zero (sem patente externa) da infraestrutura de ponta a ponta para vacinas RNA.', impact: 'Memorando e financiamento base assinado (2024).', source: 'Fiocruz / PATH', image: axisImages['Saúde Pública e Vacinas'] },
+  { id: 'inv54', title: 'Prime Editing 3.0', country: 'Estados Unidos 🇺🇸', institution: 'Broad Institute / Harvard', axis: 'Genômica & Medicina de Precisão', trl: 2, desc: 'Nova técnica de edição genética que não exige o corte perigoso da dupla fita do DNA humano.', impact: 'Artigo basal revolucionário (Science 2023).', source: 'Harvard', image: axisImages['Genômica & Medicina de Precisão'] },
+  { id: 'inv55', title: 'Bioprinting Cardíaco Vascularizado', country: 'Estados Unidos 🇺🇸', institution: 'MIT IMES / Wake Forest', axis: 'Robótica & Medicina Regenerativa', trl: 2, desc: 'Impressão 3D de órgãos inteiros operacionais contendo toda a micro-rede de veias e artérias conectadas.', impact: 'Testes de oxigenação celular em andamento.', source: 'MIT', image: axisImages['Robótica & Medicina Regenerativa'] },
 ];
 
 // --- 2. COMPONENTES AUXILIARES ---
@@ -258,8 +318,8 @@ const RadarTab = () => {
 
   return (
     <div className="flex flex-col h-full gap-4 pb-12 w-full">
-      <SectionHeader title="Radar de Inovação" subtitle="Tecnologias de Fronteira" icon={Target} />
-      <DidacticIntro text="Este radar projeta as inovações com base no Nível de Maturidade Tecnológica (TRL - Technology Readiness Level). Soluções no centro estão em fase inicial de pesquisa (TRL 1-3), enquanto nas bordas estão aplicadas no mercado e uso clínico real (TRL 7-9)." />
+      <SectionHeader title="Radar Estratégico (Top 55)" subtitle="As tecnologias de fronteira mapeadas globalmente" icon={Target} />
+      <DidacticIntro text="Este painel de inteligência posiciona 55 dos maiores saltos tecnológicos da saúde global conforme seu Nível de Maturidade Tecnológica (TRL). Do centro para as bordas, as inovações escalam da prova de conceito (TRL 1) para a liderança mercadológica real (TRL 9). Filtre por eixos e nações para descobrir quem lidera a corrida." />
 
       <div className="flex flex-wrap lg:flex-nowrap gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm shrink-0 mb-4 items-center">
          <div className="flex items-center gap-2 shrink-0"><FilterX className="w-5 h-5 text-blue-600"/><label className="font-black text-slate-800 text-sm uppercase tracking-tighter hidden md:block">Filtros:</label></div>
@@ -305,8 +365,14 @@ const RadarTab = () => {
                  const axisIndex = Object.keys(axisColors).indexOf(item.axis);
                  const trlRatio = item.trl / 9;
                  const radius = Math.max(20, trlRatio * 240); 
-                 const angleDeg = (axisIndex * (360 / Object.keys(axisColors).length)) + 30 + ((i % 5 - 2) * 8);
+                 
+                 // Espalhamento aprimorado para suportar maior densidade de inovações
+                 const spreadAngle = 40; 
+                 const spreadStep = spreadAngle / 8;
+                 const offset = ((i % 9) - 4) * spreadStep;
+                 const angleDeg = (axisIndex * (360 / Object.keys(axisColors).length)) + 30 + offset;
                  const pos = getLabelPos(angleDeg, radius);
+                 
                  return (
                    <g key={`dot-${item.id}`} 
                       className={`transition-all duration-700 cursor-pointer ${isVisible ? 'opacity-100 scale-100' : 'opacity-10 scale-50 pointer-events-none'}`}
@@ -347,12 +413,12 @@ const RadarTab = () => {
                   </div>
                   <div className="space-y-4 mb-4">
                     <div>
-                      <h5 className="text-[10px] uppercase tracking-widest font-black text-slate-400 mb-2 border-b border-slate-100 pb-1">Conceito Técnico</h5>
+                      <h5 className="text-[10px] uppercase tracking-widest font-black text-slate-400 mb-2 border-b border-slate-100 pb-1">Conceito Tecnológico</h5>
                       <p className="text-sm text-slate-700 leading-relaxed font-medium">{String(selectedCard.desc)}</p>
                     </div>
                     {selectedCard.impact && (
                       <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                        <h5 className="text-[10px] uppercase tracking-widest font-black text-blue-600 mb-1 flex items-center gap-1.5"><Zap className="w-3 h-3"/> Impacto na Prática Médica</h5>
+                        <h5 className="text-[10px] uppercase tracking-widest font-black text-blue-600 mb-1 flex items-center gap-1.5"><Zap className="w-3 h-3"/> Status de Fronteira & Impacto</h5>
                         <p className="text-xs text-blue-900 font-bold">{String(selectedCard.impact)}</p>
                       </div>
                     )}
@@ -364,14 +430,14 @@ const RadarTab = () => {
               </div>
            ) : (
              <div className="flex flex-col gap-3">
-               <div className="bg-blue-50 border border-blue-100 p-3 rounded-xl flex items-center justify-between text-blue-800 text-xs font-bold shadow-sm">
-                 <span><i className="fa-solid fa-list-ul mr-2"></i> {filteredData.length} inovações</span>
-                 <span className="opacity-60 font-normal underline">Clique para ver detalhes</span>
+               <div className="bg-blue-50 border border-blue-100 p-3 rounded-xl flex items-center justify-between text-blue-800 text-xs font-bold shadow-sm sticky top-0 z-10 backdrop-blur-md">
+                 <span><i className="fa-solid fa-layer-group mr-2"></i> Mostrando {filteredData.length} inovações mapeadas</span>
+                 <span className="opacity-60 font-normal underline cursor-pointer">Explore a galeria</span>
                </div>
                {filteredData.map((item) => (
                  <div key={item.id} 
                       className={`bg-white border-2 rounded-2xl p-3 shadow-sm flex items-center gap-4 transition-all duration-300 cursor-pointer
-                                 ${hoveredDot?.id === item.id ? 'border-blue-400 bg-slate-50 shadow-md scale-[1.01]' : 'border-slate-100 hover:border-slate-200'}`}
+                                 ${hoveredDot?.id === item.id ? 'border-blue-400 bg-slate-50 shadow-md scale-[1.01]' : 'border-slate-100 hover:border-slate-300'}`}
                       onMouseEnter={() => setHoveredDot(item)}
                       onMouseLeave={() => setHoveredDot(null)}
                       onClick={() => setSelectedCard(item)}
@@ -473,7 +539,7 @@ export default function App() {
         <div className="relative overflow-hidden w-full flex-1">
           <div className="flex transition-transform duration-700 ease-in-out items-start w-full" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
             
-            {/* SLIDE 1: Global Trends (Interactive Reveal) */}
+            {/* SLIDE 1: Global Trends */}
             <div className={`w-full shrink-0 px-2 transition-opacity duration-700 ${activeIndex === 0 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
               <SectionHeader title="Tendências Globais" icon={TrendingUp} />
               <DidacticIntro text="Passe o mouse ou toque nos cartões para revelar dados de impacto e insights de mercado. A nova indústria é movida pela convergência entre bits (digital) e átomos (biologia)." />
@@ -502,7 +568,7 @@ export default function App() {
                     </div>
 
                     {/* Verso do Card (Overlay de Insight) */}
-                    <div className="absolute inset-0 bg-slate-900 p-6 flex flex-col justify-center translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
+                    <div className="absolute inset-0 bg-slate-900 p-6 flex flex-col justify-center translate-y-[101%] group-hover:translate-y-0 transition-transform duration-[400ms] ease-out z-20">
                       <div className="flex items-center gap-3 mb-4 border-b border-white/10 pb-3">
                         <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
                           <Zap className="text-white w-5 h-5" />
@@ -533,13 +599,19 @@ export default function App() {
               </div>
             </div>
 
-            {/* SLIDE 2: Potências Mundiais (Updated with Detailed Content) */}
+            {/* SLIDE 2: Potências Mundiais */}
             <div className={`w-full shrink-0 px-2 transition-opacity duration-700 ${activeIndex === 1 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
               <SectionHeader title="Matriz de Liderança" icon={Globe} />
               <DidacticIntro 
                 title="Metodologia do Ranking Global"
-                text="O ranking avalia a integração entre Ciência & Tecnologia (Nature Index 2025), Qualidade Assistencial (Ranking Newsweek e WIHI), Inovação Industrial (GII da WIPO) e Sustentabilidade Fiscal do sistema de saúde."
+                text="O ranking avalia a integração entre quatro pilares principais: Ciência & Tecnologia (através do Nature Index 2025), Qualidade Assistencial (Ranking Newsweek e WIHI), Inovação Industrial (GII da WIPO) e Sustentabilidade Fiscal."
               />
+              <div className="grid md:grid-cols-3 gap-4 mb-8">
+                <ExecutiveSummaryCard title="Cúpula Científica" desc="Estados Unidos, China e Alemanha dominam em volume e impacto técnico." icon="🔬" colorClass="border-blue-600" />
+                <ExecutiveSummaryCard title="Equilíbrio & Sustentabilidade" desc="Suíça, Reino Unido e Suécia equilibram excelência acadêmica e sustentabilidade." icon="⚖️" colorClass="border-indigo-500" />
+                <ExecutiveSummaryCard title="Futuro Digital" desc="Singapura, Holanda e Canadá ditam a regra da saúde baseada em dados e IA." icon="📡" colorClass="border-emerald-500" />
+              </div>
+
               <div className="mb-6 flex flex-col md:flex-row items-center justify-between bg-slate-50 p-3 rounded-2xl border-2 border-slate-100 shadow-sm gap-3">
                 <div className="flex items-center gap-3 px-3"><MapPin className="w-5 h-5 text-blue-600" /><label className="font-black text-slate-800 text-sm uppercase tracking-tighter">Analisar Nação:</label></div>
                 <div className="relative w-full md:w-80">
@@ -623,6 +695,7 @@ export default function App() {
                 {brazilTop10States.filter(item => item.id === activeStateId).map((selectedData) => (
                   <div key={selectedData.id} className="flex flex-col lg:flex-row bg-white border-2 border-slate-50 rounded-[32px] overflow-hidden shadow-2xl group min-h-[400px]">
                     <div className="bg-slate-900 text-white w-full lg:w-48 p-6 flex flex-col justify-center items-center shrink-0">
+                      <span className="text-[12px] font-black uppercase tracking-widest text-emerald-400 mb-2">POSIÇÃO</span>
                       <span className="text-7xl font-black leading-none drop-shadow-xl">#{String(selectedData.rank)}</span>
                     </div>
                     <div className="w-full lg:w-[400px] shrink-0 relative bg-slate-200 border-r border-slate-50">
@@ -675,7 +748,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
           <div>
             <h5 className="font-black text-white text-sm uppercase tracking-tighter mb-1">Painel Estratégico de Inteligência na Saúde</h5>
-            <p className="text-[11px] font-medium opacity-60">Base de Dados: Nature Index 2025, Newsweek/Statista Hospitals, WIHI 2024, Global Innovation Index (WIPO), Deloitte.</p>
+            <p className="text-[11px] font-medium opacity-60">Fontes: Nature Index 2025, Newsweek/Statista World's Best Hospitals, WIHI 2024, Global Innovation Index (WIPO).</p>
           </div>
           <div className="flex flex-col items-center md:items-end">
             <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Atualização Permanente</div>
